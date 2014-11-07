@@ -350,7 +350,13 @@ hokuyo::Laser::laserReadline(char *buf, int len, int timeout)
     if (read_buf_start == read_buf_end) // Need to read?
     {
       if ((retval = poll(ufd, 1, timeout)) < 0)
+      {
+        if(errno == EINTR)
+          continue;
         HOKUYO_EXCEPT(hokuyo::Exception, "poll failed   --  error = %d: %s", errno, strerror(errno));
+       
+      }
+
 
       if (retval == 0)
         HOKUYO_EXCEPT(hokuyo::TimeoutException, "timeout reached");
@@ -359,7 +365,7 @@ hokuyo::Laser::laserReadline(char *buf, int len, int timeout)
         HOKUYO_EXCEPT(hokuyo::Exception, "error on socket, possibly unplugged");
       
       int bytes = read(laser_fd_, read_buf, sizeof(read_buf));
-      if (bytes == -1 && errno != EAGAIN && errno != EWOULDBLOCK)
+      if (bytes == -1 && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
         HOKUYO_EXCEPT(hokuyo::Exception, "read failed");
       read_buf_start = 0;
       read_buf_end = bytes;
