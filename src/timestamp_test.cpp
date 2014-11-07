@@ -2,7 +2,6 @@
 #include <time.h>
 #include <sys/time.h> 
 #include <algorithm>
-#include <stdio.h>
 
 static uint64_t timeHelper()
 {
