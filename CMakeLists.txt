@@ -57,6 +57,10 @@ target_link_libraries(getFirmwareVersion
   ${catkin_LIBRARIES}
 )
 
+add_executable(timestamp_test src/timestamp_test.cpp)
+target_link_libraries(timestamp_test ${catkin_LIBRARIES} libhokuyo)
+
+
 # Install targets
 install(TARGETS libhokuyo DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
