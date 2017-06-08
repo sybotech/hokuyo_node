@@ -21,7 +21,7 @@ find_package(catkin REQUIRED
     sensor_msgs
 )
 
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 # Dynamic reconfigure support
