@@ -32,8 +32,8 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include "driver_base/driver.h"
-#include "driver_base/driver_node.h"
+#include "hokuyo_node/driver.h"
+#include "hokuyo_node/driver_node.h"
 #include <diagnostic_updater/publisher.h>
 
 #include <assert.h>
@@ -52,7 +52,7 @@
 
 using namespace std;
 
-class HokuyoDriver : public driver_base::Driver
+class HokuyoDriver : public hokuyo_node::Driver
 {
   friend class HokuyoNode;
 
@@ -363,7 +363,7 @@ public:
   }
 };
 
-class HokuyoNode : public driver_base::DriverNode<HokuyoDriver>
+class HokuyoNode : public hokuyo_node::DriverNode<HokuyoDriver>
 {
 private:   
   string connect_fail_;
@@ -377,7 +377,7 @@ private:
 
 public:
   HokuyoNode(ros::NodeHandle &nh) :
-    driver_base::DriverNode<HokuyoDriver>(nh),
+    hokuyo_node::DriverNode<HokuyoDriver>(nh),
     node_handle_(nh),
     scan_pub_(node_handle_.advertise<sensor_msgs::LaserScan>("scan", 100),
         diagnostic_,
@@ -640,6 +640,6 @@ public:
 
 int main(int argc, char **argv)
 { 
-  return driver_base::main<HokuyoNode>(argc, argv, "hokuyo_node");
+  return hokuyo_node::main<HokuyoNode>(argc, argv, "hokuyo_node");
 }
 

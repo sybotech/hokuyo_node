@@ -11,18 +11,25 @@ endif()
 
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED
-  COMPONENTS
-    diagnostic_updater
-    driver_base
-    dynamic_reconfigure
-    rosconsole
-    roscpp
-    self_test
-    sensor_msgs
+  message_generation
+  diagnostic_updater
+  dynamic_reconfigure
+  rosconsole
+  roscpp
+  self_test
+  sensor_msgs
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_message_files(FILES
+  ConfigString.msg
+  ConfigValue.msg
+  SensorLevels.msg
+)
+
+generate_messages(DEPENDENCIES std_msgs sensor_msgs)
 
 # Dynamic reconfigure support
 generate_dynamic_reconfigure_options(cfg/Hokuyo.cfg)
@@ -30,7 +37,7 @@ generate_dynamic_reconfigure_options(cfg/Hokuyo.cfg)
 # Export with catkin_package
 catkin_package(
     INCLUDE_DIRS include
-    CATKIN_DEPENDS rosconsole
+    CATKIN_DEPENDS rosconsole sensor_msgs
     LIBRARIES libhokuyo
 )
 
@@ -41,11 +48,14 @@ target_link_libraries(libhokuyo ${rosconsole_LIBRARIES})
 # hokuyo_node
 add_executable(hokuyo_node src/hokuyo_node.cpp)
 add_dependencies(hokuyo_node ${PROJECT_NAME}_gencfg)
+add_dependencies(hokuyo_node ${PROJECT_NAME}_gencpp)
 target_link_libraries(hokuyo_node
   libhokuyo
   ${Boost_LIBRARIES}
   ${catkin_LIBRARIES}
 )
+
+#add_dependencies(hokuyo_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 add_executable(getID src/getID.cpp)
 target_link_libraries(getID libhokuyo ${LOG4CXX_LIBRARY} ${catkin_LIBRARIES})
